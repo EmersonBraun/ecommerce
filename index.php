@@ -11,6 +11,7 @@ use \Hcode\Model\Product;
 
 $app = new Slim();
 
+require_once("functions.php");
 require_once("site.php");
 require_once("admin.php");
 require_once("admin-users.php");
