@@ -141,7 +141,8 @@ class Product extends Model{
 
 		$sql = new Sql();
 
-		$rows = $sql->select("SELECT * FROM tb_products WHERE desurl = :desurl LIMIT 1",[
+		$rows = $sql->select("SELECT * FROM tb_products 
+			WHERE desurl = :desurl LIMIT 1",[
 			'desurl'=>$desurl
 		]);
 
@@ -152,7 +153,9 @@ class Product extends Model{
 
 		$sql = new Sql();
 
-		return $sql->select("SELECT * FROM tb_categories a INNER JOIN tb_productscategories b ON a.idcategory = b.idcategory WHERE b.idproduct = :idproduct",[
+		return $sql->select("SELECT * FROM tb_categories AS c INNER JOIN tb_productscategories AS pc 
+			ON c.idcategory = pc.idcategory 
+			WHERE pc.idproduct = :idproduct",[
 			':idproduct'=>$this->getidproduct()
 			]);
 	}
@@ -203,6 +206,8 @@ class Product extends Model{
 			'pages'=>ceil($resultTotal[0]["nrtotal"] / $itemsPerPage)
 		];
 	}
-}
+
+
+}//
 
 ?>
