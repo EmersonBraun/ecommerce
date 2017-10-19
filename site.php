@@ -3,6 +3,7 @@
 use \Hcode\Page;
 use \Hcode\Model\Product;
 use \Hcode\Model\Category;
+use \Hcode\Model\Cart;
 
 //página inicial
 $app->config('debug', true);
@@ -10,6 +11,7 @@ $app->config('debug', true);
 $app->get('/', function() {
     
     $products = Product::listAll();
+
     $page = new Page();
 
     $page->setTpl("index", [
@@ -60,4 +62,15 @@ $app->get("/products/:desurl", function($desurl){
         'categories'=>$product->getCategories()
     ]);
 });
+
+$app->get("/cart", function(){
+
+    $cart = Cart::getFromSession();
+
+    $page = new Page();
+
+    $page->setTpl("cart");
+
+});
+
 ?>
