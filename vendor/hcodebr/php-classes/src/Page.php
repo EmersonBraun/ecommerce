@@ -3,6 +3,7 @@
 namespace Hcode;
 
 use Rain\Tpl;
+use \Hcode\Model\User;
 
 class Page{
 

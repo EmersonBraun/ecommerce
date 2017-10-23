@@ -48,6 +48,10 @@
               <label for="desurl">URL</label>
               <input type="text" class="form-control" id="desurl" name="desurl" value="<?php echo htmlspecialchars( $product["desurl"], ENT_COMPAT, 'UTF-8', FALSE ); ?>">
             </div>
+             <div class="form-group">
+              <label for="descript">Descrição</label>
+              <input type="textarea" class="form-control" id="descript" name="<?php echo htmlspecialchars( $product["descript"], ENT_COMPAT, 'UTF-8', FALSE ); ?>">
+            </div>
             <div class="form-group">
               <label for="file">Foto</label>
               <input type="file" class="form-control" id="file" name="file" value="<?php echo htmlspecialchars( $product["vlweight"], ENT_COMPAT, 'UTF-8', FALSE ); ?>">
