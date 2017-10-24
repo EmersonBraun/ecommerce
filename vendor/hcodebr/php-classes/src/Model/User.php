@@ -11,6 +11,7 @@ class User extends Model{
 	const SESSION = "User";
 	const SECRET = "HcodePhp7_Secret";
 	const SESSION_ERROR = "UserError";
+	const ERROR_REGISTER = "UserErrorRegister";
 
 	public static function getFromSession(){
 
@@ -123,7 +124,7 @@ class User extends Model{
 		$sql = new Sql();
 
 		$results = $sql->select("CALL sp_users_save(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", array(
-			":desperson"=>>utf8_decode($this->getdesperson()),
+			":desperson"=>utf8_decode($this->getdesperson()),
 			":deslogin"=>$this->getdeslogin(),
 			":despassword"=>User::getPasswordHash($this->getdespassword()),
 			":desemail"=>$this->getdesemail(),
@@ -274,6 +275,7 @@ class User extends Model{
 		));
 
 	}
+	//erros de login
 	public static function setError($msg){
 
 		$_SESSION[self::SESSION_ERROR] = (string)$msg;
@@ -294,7 +296,38 @@ class User extends Model{
 
 		$_SESSION[User::SESSION_ERROR] = NULL;
 	}
+	//error na hora de registrar
+	public static function setErrorRegister($msg){
 
+		$_SESSION[User::ERROR_REGISTER] = $msg;
+	}
+
+	public static function getErrorRegister(){
+
+		$msg = (isset($_SESSION[User::ERROR_REGISTER]) && $_SESSION[User::ERROR_REGISTER]) ? $_SESSION[User::ERROR_REGISTER] : '';
+		
+		User::clearErrorRegister();
+
+		return $msg;
+	}
+
+	public static function clearErrorRegister(){
+
+		$_SESSION[User::ERROR_REGISTER] = NULL;
+
+	}
+	//verificar se há outro usuário com o mesmo login
+	public static function checkLoginExist($login){
+
+		$sql = new Sql();
+
+		$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :deslogin", array(
+			':deslogin'=>$login
+		));
+
+		return (count($results) > 0);
+	}
+	//criptografar a senha
 	public static function getPasswordHash($password){
 
 		return password_hash($password, PASSWORD_DEFAULT,[
