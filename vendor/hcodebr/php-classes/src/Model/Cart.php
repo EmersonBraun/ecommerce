@@ -230,11 +230,11 @@ class Cart extends Model{
 
 		if ($result->MsgErro != '') {
 
-		Cart::setMsgError($result->MsgErro);
+		Cart::setError($result->MsgErro);
 
 		} else {
 
-		Cart::clearMsgError();
+		Cart::clearError();
 
 		}
 
@@ -257,23 +257,23 @@ class Cart extends Model{
 
 	}
 
-	public static function setMsgError($msg){
+	public static function setError($msg){
 
 		$_SESSION[self::SESSION_ERROR] = (string)$msg;
 
 	}
 
-	public static function getMsgError(){
+	public static function getError(){
 
 		$msg = (isset($_SESSION[self::SESSION_ERROR])) ? $_SESSION[self::SESSION_ERROR] : "";
 
-		Cart::clearMsgError();
+		Cart::clearError();
 
 		return $msg;
 		
 	}
 
-	public static function clearMsgError(){
+	public static function clearError(){
 
 		$_SESSION[Cart::SESSION_ERROR] = NULL;
 	}
@@ -301,6 +301,20 @@ class Cart extends Model{
 
 		$this->setvlsubtotal($totals['vlprice']);
 		$this->setvltotal($totals['vlprice'] + $this->getvlfreight());
+
+	}
+	//limpar carrinho da sessão
+	public static function removeToSession(){
+
+	   $_SESSION[Cart::SESSION] = NULL;
+
+	}
+	//limpar cep
+	public function checkZipCode(){
+
+	   $products = $this->getProducts();
+
+	   if (!count($products) > 0) $this->setdeszipcode('');
 
 	}
 }//

@@ -68,7 +68,7 @@
                                         </td>
 
                                         <td class="product-subtotal">
-                                            <span class="amount">>R$<?php echo formatPrice($value1["vltotal"]); ?></span> 
+                                            <span class="amount">R$<?php echo formatPrice($value1["vltotal"]); ?></span> 
                                         </td>
                                     </tr>
                                     <?php } ?>
@@ -103,7 +103,7 @@
 
                                             <tr class="shipping">
                                                 <th>Frete</th>
-                                                <td>R$<?php echo formatPrice($cart["vlfreight"]); ?> <?php if( $cart["nrdays"] > 0 ){ ?> <small>prazo de <?php echo htmlspecialchars( $cart["nrdays"], ENT_COMPAT, 'UTF-8', FALSE ); ?> dia(s)</small><?php } ?></td>
+                                                <td>R$<?php echo formatPrice($cart["vlfreight"]); ?> <?php if( $cart["nrdays"] > 0 ){ ?> <br><small>prazo de <?php echo htmlspecialchars( $cart["nrdays"], ENT_COMPAT, 'UTF-8', FALSE ); ?> dia(s)</small><?php } ?></td>
                                             </tr>
 
                                             <tr class="order-total">

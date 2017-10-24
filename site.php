@@ -4,6 +4,8 @@ use \Hcode\Page;
 use \Hcode\Model\Product;
 use \Hcode\Model\Category;
 use \Hcode\Model\Cart;
+use \Hcode\Model\Address;
+use \Hcode\Model\User;
 
 //página inicial
 $app->config('debug', true);
@@ -63,79 +65,59 @@ $app->get("/products/:desurl", function($desurl){
     ]);
 });
 
-$app->get("/cart", function(){
+//login usuario
+$app->get("/checkout",function(){
+
+    User::verifyLogin(false);
 
     $cart = Cart::getFromSession();
 
+    $address= new Address;
+
     $page = new Page();
 
-    $page->setTpl("cart", [
+    $page->setTpl("checkout",[
         'cart'=>$cart->getValues(),
-        'products'=>$cart->getProducts(),
-        'error'=>Cart::getMsgError()
+        'address'=>$address->getValues()
     ]);
 
 });
 
-$app->get("/cart/:idproduct/add", function($idproduct){
+$app->get("/login",function(){
 
-    $product = new Product();
+    $page = new Page();
 
-    $product->get((int)$idproduct);
+    $page->setTpl("login",[
+        'error'=>User::getError()
+    ]);
 
-    $cart = Cart::getFromSession();
+});
 
-    $qtd = (isset($_GET['qtd'])) ? (int)$_GET['qtd'] : 1;
+$app->post("/login",function(){
 
-    for ($i = 0; $i < $qtd; $i++){
+    try{
 
-        $cart->addProduct($product);
+        User::login($_POST['login'], $_POST['password']);
+
+    } catch(Exception $e){
+
+        User::setError($e->getMessage());
+
     }
 
-    header("Location: /cart");
+    header("Location: /checkout");
     exit;
-
 });
 
-$app->get("/cart/:idproduct/minus", function($idproduct){
+$app->get("/logout", function(){
 
-    $product = new Product();
+   User::logout();
 
-    $product->get((int)$idproduct);
+   Cart::removeToSession();
 
-    $cart = Cart::getFromSession();
+   session_regenerate_id();
 
-    $cart->removeProduct($product);
-
-    header("Location: /cart");
-    exit;
-
+   header("Location: /login");
+   exit;
 });
-
-$app->get("/cart/:idproduct/remove", function($idproduct){
-
-    $product = new Product();
-
-    $product->get((int)$idproduct);
-
-    $cart = Cart::getFromSession();
-
-    $cart->removeProduct($product, true);
-    
-    header("Location: /cart");
-    exit;
-
-});
-
-$app->post("/cart/freight",function(){
-
-    $cart = Cart::getFromSession();
-
-    $cart->setFreight($_POST['zipcode']);
-
-    header("Location: /cart");
-    exit;
-
-});
-
 ?>

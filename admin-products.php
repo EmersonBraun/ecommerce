@@ -86,20 +86,23 @@ $app->get("/admin/products/:idproduct", function($idproduct){
 
 $app->post("/admin/products/:idproduct", function($idproduct){
 
-	User::verifyLogin();
+   User::verifyLogin();
 
-	$product = new Product();
+   $product = new Product();
 
-	$product->get((int)$idproduct);
+   $product->get((int)$idproduct);
 
-	$product->setData($_POST);
+   $product->setData($_POST);
 
-	$product->save();
+   $product->save();
 
-	$product->setPhoto($_FILES['file']);
+   if ((int)$_FILES["file"]["size"] > 0) {
+     $product->setPhoto($_FILES["file"]);
+   }
 
-	header("Location: /admin/products");
-	exit;
+   header('Location: /admin/products');
+   exit;
+
 });
 
 $app->get("/admin/products/:idproduct/delete", function($idproduct){
