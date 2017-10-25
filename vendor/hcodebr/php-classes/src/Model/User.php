@@ -12,6 +12,7 @@ class User extends Model{
 	const SECRET = "HcodePhp7_Secret";
 	const SESSION_ERROR = "UserError";
 	const ERROR_REGISTER = "UserErrorRegister";
+	const SUCCESS = "UserSuccess";
 
 	public static function getFromSession(){
 
@@ -282,13 +283,13 @@ class User extends Model{
 	//erros de login
 	public static function setError($msg){
 
-		$_SESSION[self::SESSION_ERROR] = (string)$msg;
+		$_SESSION[User::SESSION_ERROR] = (string)$msg;
 
 	}
 
 	public static function getError(){
 
-		$msg = (isset($_SESSION[self::SESSION_ERROR])) ? $_SESSION[self::SESSION_ERROR] : "";
+		$msg = (isset($_SESSION[User::SESSION_ERROR])) ? $_SESSION[User::SESSION_ERROR] : "";
 
 		User::clearError();
 
@@ -319,6 +320,27 @@ class User extends Model{
 
 		$_SESSION[User::ERROR_REGISTER] = NULL;
 
+	}
+	//mensagem de sucesso
+	public static function setSuccess($msg){
+
+		$_SESSION[User::SUCCESS] = (string)$msg;
+
+	}
+
+	public static function getSuccess(){
+
+		$msg = (isset($_SESSION[User::SUCCESS])) ? $_SESSION[User::SUCCESS] : "";
+
+		User::clearSuccess();
+
+		return $msg;
+		
+	}
+
+	public static function clearSuccess(){
+
+		$_SESSION[User::SUCCESS] = NULL;
 	}
 	//verificar se há outro usuário com o mesmo login
 	public static function checkLoginExist($login){
