@@ -4,6 +4,8 @@ use \Hcode\Model\User;
 
 function formatPrice($vlprcice){
 
+	if(!$vlprcice > 0) $vlprcice = 0;
+	
 	return number_format((float)$vlprcice,2,",",".");;
 }
 

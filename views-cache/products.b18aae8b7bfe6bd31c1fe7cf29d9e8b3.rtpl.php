@@ -22,19 +22,19 @@
               <a href="/admin/products/create" class="btn btn-success">Cadastrar Produto</a>
             </div>
 
-            <div class="box-body no-padding">
-              <table class="table table-striped">
+            <div class="box-body">
+              <table id="example1" class="table table-bordered table-striped">
                 <thead>
                   <tr>
                     <th style="width: 10px">#</th>
-                    <th>Nome da Produto</th>
+                    <th class="sorting">Nome da Produto</th>
                     <th>Preço</th>
                     <th>Largura</th>
                     <th>Altura</th>
                     <th>Comprimento</th>
                     <th>Peso</th>
                     <th>URL</th>
-                    <th style="width: 140px">&nbsp;</th>
+                    <th style="width: 80px">&nbsp;</th>
                   </tr>
                 </thead>
                 <tbody>
