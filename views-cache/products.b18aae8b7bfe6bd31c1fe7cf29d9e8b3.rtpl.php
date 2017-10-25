@@ -27,7 +27,7 @@
                 <thead>
                   <tr>
                     <th style="width: 10px">#</th>
-                    <th class="sorting">Nome da Produto</th>
+                    <th>Nome da Produto</th>
                     <th>Preço</th>
                     <th>Largura</th>
                     <th>Altura</th>

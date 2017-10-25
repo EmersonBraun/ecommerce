@@ -259,13 +259,13 @@ class Cart extends Model{
 
 	public static function setError($msg){
 
-		$_SESSION[self::SESSION_ERROR] = (string)$msg;
+		$_SESSION[Cart::SESSION_ERROR] = (string)$msg;
 
 	}
 
 	public static function getError(){
 
-		$msg = (isset($_SESSION[self::SESSION_ERROR])) ? $_SESSION[self::SESSION_ERROR] : "";
+		$msg = (isset($_SESSION[Cart::SESSION_ERROR])) ? $_SESSION[Cart::SESSION_ERROR] : "";
 
 		Cart::clearError();
 
