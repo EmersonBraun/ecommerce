@@ -10,6 +10,12 @@ function formatPrice($vlprcice){
 	return number_format((float)$vlprcice,2,",",".");;
 }
 
+function formatDate($date){
+
+	return date('d/m/Y', strtotime($date));
+	
+}
+
 function toUppercase($name){
 
 	return strtoupper($name);
@@ -44,4 +50,5 @@ function getCartVlSubTotal(){
 
 	return formatPrice($totals['vlprice']);
 }
+
 ?>
