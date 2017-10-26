@@ -4,6 +4,8 @@ use \Hcode\Page;
 use \Hcode\Model\Address;
 use \Hcode\Model\User;
 use \Hcode\Model\Cart;
+use \Hcode\Model\Order;
+use \Hcode\Model\OrderStatus;
 
 //login usuario
 $app->get("/checkout",function(){
@@ -50,9 +52,9 @@ $app->get("/checkout",function(){
 });
 
 $app->post("/checkout",function(){
-
+	//verifica login
 	User::verifyLogin(false);
-
+	//verifica se falta algum dado
 	if (!isset($_POST['zipcode']) || $_POST['zipcode'] === '') {
 		
 		Address::setError("Informe o CEP");
@@ -83,10 +85,9 @@ $app->post("/checkout",function(){
 		header("Location: /checkout");
 		exit;
 	}
-	
-
+	//dados de usuário
 	$user = User::getFromSession();
-
+	//acertos para endereço
 	$address = new Address();
 
 	$_POST['deszipcode'] = $_POST['zipcode'];
@@ -95,8 +96,24 @@ $app->post("/checkout",function(){
 	$address->setData($_POST);
 
 	$address->save();
+	//dados carrinho
+	$cart = Cart::getFromSession();
+	//valor total
+	$totals = $cart->getCalculateTotal();
+	//gerar ordem
+	$order = new Order();
 
-	header("Location: /order");
+	$order->setData([
+		'idcart'=>$cart->getidcart(),
+		'iduser'=>$user->getiduser(),
+		'idstatus'=>OrderStatus::EM_ABERTO,
+		'idaddress'=>$address->getidaddress(),
+		'vltotal'=>$totals['vlprice'] + $cart->getvlfreight()
+		]);
+
+	$order->save();
+	
+	header("Location: /order/".$order->getidorder());
 	exit;
 });
 
