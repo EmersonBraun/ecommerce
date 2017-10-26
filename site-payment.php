@@ -8,6 +8,114 @@ use \Hcode\Model\Order;
 use \Hcode\Model\OrderStatus;
 
 //pagamento
+$app->get("/checkout",function(){
+
+    User::verifyLogin(false);
+
+    $address = new Address;
+
+    $cart = Cart::getFromSession();
+
+    if(isset($_GET['zipcode'])){
+
+    	$_GET['zipcode'] = $cart->getdeszipcode();
+    }
+
+    if(isset($_GET['zipcode'])){
+
+    	$address->loadFromCEP($_GET['zipcode']);
+
+    	$cart->setdeszipcode($_GET['zipcode']);
+
+    	$cart->save();
+
+    	$cart->getCalculateTotal();
+    }
+
+    if(!$address->getdesaddress()) $address->setdesaddress('');
+    if(!$address->getdescomplement()) $address->setdescomplement('');
+    if(!$address->getdesdistrict()) $address->setdesdistrict('');
+    if(!$address->getdescity()) $address->setdescity('');
+    if(!$address->getdesstate()) $address->setdesstate('');
+    if(!$address->getdescountry()) $address->setdescountry('');
+    if(!$address->getdeszipcode()) $address->setdeszipcode('');
+
+    $page = new Page();
+
+    $page->setTpl("checkout",[
+        'cart'=>$cart->getValues(),
+        'address'=>$address->getValues(),
+        'products'=>$cart->getProducts(),
+        'error'=>Address::getError(),
+    ]);
+
+});
+
+$app->post("/checkout",function(){
+	//verifica login
+	User::verifyLogin(false);
+	//verifica se falta algum dado
+	if (!isset($_POST['zipcode']) || $_POST['zipcode'] === '') {
+		
+		Address::setError("Informe o CEP");
+		header("Location: /checkout");
+		exit;
+	}
+	if (!isset($_POST['desaddress']) || $_POST['desaddress'] === '') {
+		
+		Address::setError("Informe o endereço");
+		header("Location: /checkout");
+		exit;
+	}
+	if (!isset($_POST['desdistrict']) || $_POST['desdistrict'] === '') {
+		
+		Address::setError("Informe o bairro");
+		header("Location: /checkout");
+		exit;
+	}
+	if (!isset($_POST['descity']) || $_POST['descity'] === '') {
+		
+		Address::setError("Informe a cidade");
+		header("Location: /checkout");
+		exit;
+	}
+	if (!isset($_POST['desstate']) || $_POST['desstate'] === '') {
+		
+		Address::setError("Informe o estado.");
+		header("Location: /checkout");
+		exit;
+	}
+	//dados de usuário
+	$user = User::getFromSession();
+	//acertos para endereço
+	$address = new Address();
+
+	$_POST['deszipcode'] = $_POST['zipcode'];
+	$_POST['idperson'] = $user->getidperson();
+
+	$address->setData($_POST);
+
+	$address->save();
+	//dados carrinho
+	$cart = Cart::getFromSession();
+	//atualizar valor total
+	$cart->getCalculateTotal();
+	//gerar ordem
+	$order = new Order();
+
+	$order->setData([
+		'idcart'=>$cart->getidcart(),
+		'iduser'=>$user->getiduser(),
+		'idstatus'=>OrderStatus::EM_ABERTO,
+		'idaddress'=>$address->getidaddress(),
+		'vltotal'=>$cart->getvltotal()
+		]);
+
+	$order->save();
+	
+	header("Location: /order/".$order->getidorder());
+	exit;
+});
 $app->get("/order/:idorder", function($idorder){
 
 	User::verifyLogin(false);
@@ -37,7 +145,7 @@ $dias_de_prazo_para_pagamento = 10;
 $taxa_boleto = 5.00;
 $data_venc = date("d/m/Y", time() + ($dias_de_prazo_para_pagamento * 86400));  // Prazo de X dias OU informe data: "13/04/2006"; 
 $valor_cobrado = formatPrice($order->getvltotal()); // Valor - REGRA: Sem pontos na milhar e tanto faz com "." ou "," ou com 1 ou 2 ou sem casa decimal
-$valor_cobrado = str_replace(",", ".",$valor_cobrado);
+$valor_cobrado = str_replace(".", "",$valor_cobrado);
 $valor_boleto=number_format($valor_cobrado+$taxa_boleto, 2, ',', '');
 
 $dadosboleto["nosso_numero"] = $order->getidorder();  // Nosso numero - REGRA: Máximo de 8 caracteres!
@@ -49,8 +157,8 @@ $dadosboleto["valor_boleto"] = $valor_boleto; 	// Valor do Boleto - REGRA: Com v
 
 // DADOS DO SEU CLIENTE
 $dadosboleto["sacado"] = $order->getdesperson();
-$dadosboleto["endereco1"] = $order->getdesaddress()." ".$order->getdesdistrict();
-$dadosboleto["endereco2"] = $order->getdescity()." - ".$order->getdesestate()." - CEP: ".$order->getdeszipcode();
+$dadosboleto["endereco1"] = utf8_encode($order->getdesaddress())." ".utf8_encode($order->getdesdistrict());
+$dadosboleto["endereco2"] = utf8_encode($order->getdescity())." - ".utf8_encode($order->getdesstate())." - CEP: ".$order->getdeszipcode();
 
 // INFORMACOES PARA O CLIENTE
 $dadosboleto["demonstrativo1"] = "Pagamento de Compra na Loja Hcode E-commerce";

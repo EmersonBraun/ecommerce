@@ -8,115 +8,6 @@ use \Hcode\Model\Order;
 use \Hcode\Model\OrderStatus;
 
 //login usuario
-$app->get("/checkout",function(){
-
-    User::verifyLogin(false);
-
-    $address = new Address;
-
-    $cart = Cart::getFromSession();
-
-    if(isset($_GET['zipcode'])){
-
-    	$_GET['zipcode'] = $cart->getdeszipcode();
-    }
-
-    if(isset($_GET['zipcode'])){
-
-    	$address->loadFromCEP($_GET['zipcode']);
-
-    	$cart->setdeszipcode($_GET['zipcode']);
-
-    	$cart->save();
-
-    	$cart->getCalculateTotal();
-    }
-
-    if(!$address->getdesaddress()) $address->setdesaddress('');
-    if(!$address->getdescomplement()) $address->setdescomplement('');
-    if(!$address->getdesdistrict()) $address->setdesdistrict('');
-    if(!$address->getdescity()) $address->setdescity('');
-    if(!$address->getdesstate()) $address->setdesstate('');
-    if(!$address->getdescountry()) $address->setdescountry('');
-    if(!$address->getdeszipcode()) $address->setdeszipcode('');
-
-    $page = new Page();
-
-    $page->setTpl("checkout",[
-        'cart'=>$cart->getValues(),
-        'address'=>$address->getValues(),
-        'products'=>$cart->getProducts(),
-        'error'=>Address::getError(),
-    ]);
-
-});
-
-$app->post("/checkout",function(){
-	//verifica login
-	User::verifyLogin(false);
-	//verifica se falta algum dado
-	if (!isset($_POST['zipcode']) || $_POST['zipcode'] === '') {
-		
-		Address::setError("Informe o CEP");
-		header("Location: /checkout");
-		exit;
-	}
-	if (!isset($_POST['desaddress']) || $_POST['desaddress'] === '') {
-		
-		Address::setError("Informe o endereço");
-		header("Location: /checkout");
-		exit;
-	}
-	if (!isset($_POST['desdistrict']) || $_POST['desdistrict'] === '') {
-		
-		Address::setError("Informe o bairro");
-		header("Location: /checkout");
-		exit;
-	}
-	if (!isset($_POST['descity']) || $_POST['descity'] === '') {
-		
-		Address::setError("Informe a cidade");
-		header("Location: /checkout");
-		exit;
-	}
-	if (!isset($_POST['desstate']) || $_POST['desstate'] === '') {
-		
-		Address::setError("Informe o estado.");
-		header("Location: /checkout");
-		exit;
-	}
-	//dados de usuário
-	$user = User::getFromSession();
-	//acertos para endereço
-	$address = new Address();
-
-	$_POST['deszipcode'] = $_POST['zipcode'];
-	$_POST['idperson'] = $user->getidperson();
-
-	$address->setData($_POST);
-
-	$address->save();
-	//dados carrinho
-	$cart = Cart::getFromSession();
-	//valor total
-	$totals = $cart->getCalculateTotal();
-	//gerar ordem
-	$order = new Order();
-
-	$order->setData([
-		'idcart'=>$cart->getidcart(),
-		'iduser'=>$user->getiduser(),
-		'idstatus'=>OrderStatus::EM_ABERTO,
-		'idaddress'=>$address->getidaddress(),
-		'vltotal'=>$totals['vlprice'] + $cart->getvlfreight()
-		]);
-
-	$order->save();
-	
-	header("Location: /order/".$order->getidorder());
-	exit;
-});
-
 $app->get("/login",function(){
 
     $page = new Page();
@@ -333,4 +224,43 @@ $app->post("/profile",function(){
 	exit;
 
 });
+
+$app->get("/profile/orders", function(){
+
+	User::verifyLogin(false);
+
+	$user = User::getFromSession();
+
+	$page = new Page();
+
+	$page->setTpl("profile-orders",[
+		'orders'=>$user->getOrders()
+	]);
+
+});
+
+$app->get("/profile/orders/:idorder", function($idorder){
+
+	User::verifyLogin(false);
+
+	$order = new Order();
+
+	$order->get((int)$idorder);
+
+	$cart = new Cart();
+
+	$cart->get((int)$order->getidcart());
+
+	$cart->getCalculateTotal();
+
+	$page = new Page();
+
+	$page->setTpl("profile-orders-detail",[
+		'order'=>$order->getValues(),
+		'cart'=>$cart->getValues(),
+		'products'=>$cart->getProducts(),
+	]);
+
+});
+
 ?>
