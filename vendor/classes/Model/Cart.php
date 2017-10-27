@@ -1,11 +1,11 @@
 <?php 
 
-namespace Hcode\Model;
+namespace Braun\Model;
 
-use \Hcode\DB\Sql;
-use \Hcode\Model;
-use \Hcode\Mailer;
-use \Hcode\Model\User;
+use \Braun\DB\Sql;
+use \Braun\Model;
+use \Braun\Mailer;
+use \Braun\Model\User;
 
 class Cart extends Model{
 

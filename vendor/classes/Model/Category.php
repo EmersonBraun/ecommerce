@@ -1,10 +1,10 @@
 <?php 
 
-namespace Hcode\Model;
+namespace Braun\Model;
 
-use \Hcode\DB\Sql;
-use \Hcode\Model;
-use \Hcode\Mailer;
+use \Braun\DB\Sql;
+use \Braun\Model;
+use \Braun\Mailer;
 
 class Category extends Model{
 
@@ -101,7 +101,7 @@ class Category extends Model{
 		}
 	}
 
-	public function getProductsPage($page = 1, $itemsPerPage = 1){
+	public function getProductsPage($page = 1, $itemsPerPage = 10){
 
 		$start = ($page - 1) * $itemsPerPage;
 

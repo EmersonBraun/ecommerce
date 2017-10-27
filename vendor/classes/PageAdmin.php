@@ -1,9 +1,9 @@
 <?php 
 
-namespace Hcode;
+namespace Braun;
 
 use Rain\Tpl;
-use \Hcode\Model\User;
+use \Braun\Model\User;
 
 class PageAdmin extends Page {
 

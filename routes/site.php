@@ -1,11 +1,11 @@
 <?php 
 
-use \Hcode\Page;
-use \Hcode\Model\Product;
-use \Hcode\Model\Category;
-use \Hcode\Model\Cart;
-use \Hcode\Model\Address;
-use \Hcode\Model\User;
+use \Braun\Page;
+use \Braun\Model\Product;
+use \Braun\Model\Category;
+use \Braun\Model\Cart;
+use \Braun\Model\Address;
+use \Braun\Model\User;
 
 //página inicial
 $app->config('debug', true);

@@ -1,9 +1,9 @@
 <?php
 
-namespace Hcode\Model;
-use \Hcode\DB\Sql;
-use \Hcode\Model;
-use \Hcode\Mailer;
+namespace Braun\Model;
+use \Braun\DB\Sql;
+use \Braun\Model;
+use \Braun\Mailer;
 
 class Product extends Model{
 

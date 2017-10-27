@@ -1,10 +1,10 @@
 <?php 
 
-namespace Hcode\Model;
+namespace Braun\Model;
 
-use \Hcode\DB\Sql;
-use\Hcode\Model;
-use\Hcode\Model\Cart;
+use \Braun\DB\Sql;
+use\Braun\Model;
+use\Braun\Model\Cart;
 
 class Order extends Model{
 

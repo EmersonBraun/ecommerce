@@ -1,9 +1,9 @@
 <?php 
-use \Hcode\Page;
-use \Hcode\PageAdmin;
-use \Hcode\Model\User;
-use \Hcode\Model\Category;
-use \Hcode\Model\Product;
+use \Braun\Page;
+use \Braun\PageAdmin;
+use \Braun\Model\User;
+use \Braun\Model\Category;
+use \Braun\Model\Product;
 
 //listar categorias
 $app->get("/admin/categories",function(){

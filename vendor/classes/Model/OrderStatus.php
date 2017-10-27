@@ -1,9 +1,9 @@
 <?php 
 
-namespace Hcode\Model;
+namespace Braun\Model;
 
-use \Hcode\DB\Sql;
-use\Hcode\Model;
+use \Braun\DB\Sql;
+use\Braun\Model;
 
 class OrderStatus extends Model{
 
