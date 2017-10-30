@@ -2,22 +2,23 @@
 use \Braun\PageAdmin;
 use \Braun\Model\User;
 use \Braun\Model\Product;
+use \Braun\Model\Pagination;
 
 $app->get("/admin/products", function(){
 
 	User::verifyLogin();
-
+	//paginação e busca
 	$search = (isset($_GET['search']))  ? $_GET['search']: "";
 
 	$page = (isset($_GET['page']))? (int)$_GET['page'] : 1;
 
 	if ($search != '') {
 
-		$pagination = Product::getPageSearch($search, $page);
+		$pagination = Pagination::getPageSearch("product",$search, $page);
 		
 	}else{
 
-		$pagination = Product::getPage($page);
+		$pagination = Pagination::getPage("product",$page);
 	}
 
 	$pages = [];

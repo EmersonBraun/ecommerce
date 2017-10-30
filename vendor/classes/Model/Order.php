@@ -132,6 +132,8 @@ class Order extends Model{
 
 		$_SESSION[Order::SUCCESS] = NULL;
 	}
+
+	
 }//
 
 ?>

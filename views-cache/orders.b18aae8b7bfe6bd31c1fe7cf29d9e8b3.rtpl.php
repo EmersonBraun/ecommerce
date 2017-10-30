@@ -19,7 +19,7 @@
   		<div class="box box-primary">
 
             <div class="box-body no-padding">
-              <table class="table table-striped">
+              <table id="example1" class="table table-striped">
                 <thead>
                   <tr>
                     <th style="width: 10px">#</th>

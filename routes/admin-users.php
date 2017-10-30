@@ -2,13 +2,12 @@
 
 use \Braun\PageAdmin;
 use \Braun\Model\User;
+use \Braun\Model\Pagination;
 
 //listar usuários
 $app->get('/admin/users',function(){
 
 	User::verifyLogin();
-
-	$users = User::listAll();
 
 	$search = (isset($_GET['search'])) ? $_GET['search'] : "";
 
@@ -16,11 +15,11 @@ $app->get('/admin/users',function(){
 
 	if ($search !== '') {
 
-		$pagination = User::getPageSearch($search, $page);
+		$pagination = Pagination::getPageSearch("user",$search, $page);
 
 	} else {
 
-		$pagination = User::getPage($page);
+		$pagination = Pagination::getPage("user",$page);
 
 	}
 	

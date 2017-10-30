@@ -4,18 +4,47 @@ use \Braun\PageAdmin;
 use \Braun\Model\User;
 use \Braun\Model\Category;
 use \Braun\Model\Product;
+use \Braun\Model\Pagination;
 
 //listar categorias
 $app->get("/admin/categories",function(){
 
 	User::verifyLogin();
 	
-	$categories = Category::listAll();
+	//paginação e busca
+	$search = (isset($_GET['search']))  ? $_GET['search']: "";
+
+	$page = (isset($_GET['page']))? (int)$_GET['page'] : 1;
+
+	if ($search != '') {
+
+		$pagination = Pagination::getPageSearch("category",$search, $page);
+		
+	}else{
+
+		$pagination = Pagination::getPage("category",$page);
+	}
+
+	$pages = [];
+
+	for ($x = 0; $x < $pagination['pages']; $x++){
+
+		array_push($pages, [
+			'href'=>'/admin/users?'.http_build_query([
+				'page'=>$x+1,
+				'search'=>$search
+			]),
+			'text'=>$x+1
+		]);
+
+	}
 
 	$page = new PageAdmin();
 
 	$page->setTpl("categories", [
-		"categories"=>$categories
+		"categories"=>$pagination['data'],
+		"search"=>$search,
+		"pages"=>$pages
 	]);
 
 });
