@@ -4,6 +4,7 @@ use \Braun\PageAdmin;
 use \Braun\Model\User;
 use \Braun\Model\Order;
 use \Braun\Model\OrderStatus;
+use \Braun\Model\Msg;
 
 $app->get("/admin/orders/:idorder/status", function($idorder){
 
@@ -18,8 +19,8 @@ $app->get("/admin/orders/:idorder/status", function($idorder){
 	$page->setTpl("order-status",[
 		'order'=>$order->getValues(),
 		'status'=>OrderStatus::listAll(),
-		'msgSuccess'=>Order::getSuccess(),
-		'msgError'=>Order::getError()
+		'msgSuccess'=>Msg::getSuccess(),
+		'msgError'=>Msg::getError()
 
 	]);
 
@@ -31,7 +32,7 @@ $app->post("/admin/orders/:idorder/status", function($idorder){
 
 	if (!isset($_POST['idstatus']) || (int)$_POST['idstatus'] < 0) {
 		
-		Order::setError("Informe o status atual");
+		Msg::setError("Informe o status atual");
 		header("Location: /admin/orders/".$idorder."/status");
 		exit;
 	}
@@ -44,7 +45,7 @@ $app->post("/admin/orders/:idorder/status", function($idorder){
 
 	$order->save();
 
-	Order::setSuccess("Status atualizado");
+	Msg::setSuccess("Status atualizado");
 	header("Location: /admin/orders/".$idorder."/status");
 	exit;
 

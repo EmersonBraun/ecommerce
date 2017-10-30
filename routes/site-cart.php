@@ -6,6 +6,7 @@ use \Braun\Model\Category;
 use \Braun\Model\Cart;
 use \Braun\Model\Address;
 use \Braun\Model\User;
+use \Braun\Model\Msg;
 
 //carrinho
 $app->get("/cart", function(){

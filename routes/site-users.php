@@ -6,6 +6,7 @@ use \Braun\Model\User;
 use \Braun\Model\Cart;
 use \Braun\Model\Order;
 use \Braun\Model\OrderStatus;
+use \Braun\Model\Msg;
 
 //login usuario
 $app->get("/login",function(){

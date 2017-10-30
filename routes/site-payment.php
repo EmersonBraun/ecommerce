@@ -6,6 +6,7 @@ use \Braun\Model\User;
 use \Braun\Model\Cart;
 use \Braun\Model\Order;
 use \Braun\Model\OrderStatus;
+use \Braun\Model\Msg;
 
 //pagamento
 $app->get("/checkout",function(){
@@ -46,7 +47,7 @@ $app->get("/checkout",function(){
         'cart'=>$cart->getValues(),
         'address'=>$address->getValues(),
         'products'=>$cart->getProducts(),
-        'error'=>Address::getError(),
+        'error'=>Msg::getError(),
     ]);
 
 });
@@ -57,31 +58,31 @@ $app->post("/checkout",function(){
 	//verifica se falta algum dado
 	if (!isset($_POST['zipcode']) || $_POST['zipcode'] === '') {
 		
-		Address::setError("Informe o CEP");
+		Msg::setError("Informe o CEP");
 		header("Location: /checkout");
 		exit;
 	}
 	if (!isset($_POST['desaddress']) || $_POST['desaddress'] === '') {
 		
-		Address::setError("Informe o endereço");
+		Msg::setError("Informe o endereço");
 		header("Location: /checkout");
 		exit;
 	}
 	if (!isset($_POST['desdistrict']) || $_POST['desdistrict'] === '') {
 		
-		Address::setError("Informe o bairro");
+		Msg::setError("Informe o bairro");
 		header("Location: /checkout");
 		exit;
 	}
 	if (!isset($_POST['descity']) || $_POST['descity'] === '') {
 		
-		Address::setError("Informe a cidade");
+		Msg::setError("Informe a cidade");
 		header("Location: /checkout");
 		exit;
 	}
 	if (!isset($_POST['desstate']) || $_POST['desstate'] === '') {
 		
-		Address::setError("Informe o estado.");
+		Msg::setError("Informe o estado.");
 		header("Location: /checkout");
 		exit;
 	}

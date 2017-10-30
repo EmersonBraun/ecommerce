@@ -3,7 +3,62 @@
 use \Braun\PageAdmin;
 use \Braun\Model\User;
 use \Braun\Model\Pagination;
+use \Braun\Model\Msg;
+//aterar senha
+$app->get("/admin/users/:iduser/password",function($iduser){
 
+	User::verifyLogin();
+
+	$user = new User();
+
+	$user->get((int)$iduser);
+
+	$page = new PageAdmin();
+
+    $page->setTpl("users-password", [
+    	"user"=>$user->getValues(),
+    	"msgError"=>Msg::getError(),
+    	"msgSuccess"=>Msg::getSuccess()
+    ]);
+
+});
+
+$app->post("/admin/users/:iduser/password",function($iduser){
+
+	User::verifyLogin();
+
+	if (!isset($_POST['despassword']) || $_POST['despassword'] === '') {
+		
+		Msg::setError("preencha a nova senha");
+		header("Location: /admin/users/$iduser/password");
+		exit;
+	}
+
+	if (!isset($_POST['despassword-confirm']) || $_POST['despassword-confirm'] === '') {
+		
+		Msg::setError("preencha a confirmação da nova senha");
+		header("Location: /admin/users/$iduser/password");
+		exit;
+	}
+
+	if ($_POST['despassword'] !== $_POST['despassword-confirm']) {
+		
+		Msg::setError("As senhas não conferem");
+		header("Location: /admin/users/$iduser/password");
+		exit;
+	}
+
+	$user = new User();
+
+	$user->get((int)$iduser);
+
+	$user->setPassword(User::getPasswordHash($_POST['despassword']));
+
+	Msg::setSuccess("Senha alterada com sucesso!");
+		header("Location: /admin/users/$iduser/password");
+		exit;
+
+});
 //listar usuários
 $app->get('/admin/users',function(){
 
